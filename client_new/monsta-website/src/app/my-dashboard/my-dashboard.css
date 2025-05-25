@@ -1,0 +1,118 @@
+/*  18. my account css here */
+@media only screen and (max-width: 767px) {
+    .dashboard_tab_button {
+      margin-bottom: 20px;
+    }
+  }
+  .dashboard_tab_button ul li {
+    margin-bottom: 5px;
+    color: #ffffff !important;
+  }
+  .dashboard_tab_button ul li a {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 500;
+    text-transform: capitalize;
+    background: #212121;
+    border-radius: 3px;
+  }
+  .dashboard_tab_button ul li a:hover {
+    background: #c09578;
+    color: #ffffff;
+  }
+  .dashboard_tab_button ul li a.active {
+    background: #c09578;
+  }
+  
+  .main_content_area {
+    padding-bottom: 65px;
+  }
+  @media only screen and (max-width: 767px) {
+    .main_content_area {
+      padding-bottom: 55px;
+    }
+  }
+  
+  .dashboard_content h3 {
+    font-size: 22px;
+    text-transform: capitalize;
+    font-weight: 700;
+    color: #242424;
+    margin-bottom: 15px;
+  }
+  .dashboard_content h4 {
+    font-size: 20px;
+    text-transform: capitalize;
+    color: #212121;
+    font-weight: 500;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  .dashboard_content a {
+    color: #c09578;
+    font-weight: 500;
+  }
+  .dashboard_content p a {
+    color: #c09578;
+    font-weight: 500;
+  }
+  
+  .table-responsive table thead {
+    background: #f2f2f2;
+  }
+  .table-responsive table thead tr th {
+    text-align: center;
+    color: #242424;
+    font-family: "Playfair Display", serif;
+  }
+  .table-responsive table tbody tr td {
+    border-right: 1px solid #ebebeb;
+    color: #212121;
+    font-weight: 500;
+    text-transform: capitalize;
+    font-size: 14px;
+    text-align: center;
+    min-width: 150px;
+  }
+  .table-responsive table tbody tr td:last-child a {
+    color: #c09578;
+  }
+  .table-responsive .table {
+    border-left: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    border-right: 1px solid #ebebeb;
+  }
+  
+  .dashboard_content address {
+    font-weight: 500;
+    color: #212121;
+  }
+  
+  .input-radio span input[type="radio"], .account_login_form form span input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin-right: 2px;
+    position: relative;
+    top: 2px;
+  }
+  
+  .input-radio span {
+    color: #212121;
+    font-weight: 500;
+    padding-right: 10px;
+  }
+  
+  .account_login_form form input {
+    border: 1px solid #ddd;
+    background: none;
+    height: 40px;
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 0 20px;
+    color: #5a5a5a;
+  }
+  
+  /*my account css end*/
+
+  /* 
+   */

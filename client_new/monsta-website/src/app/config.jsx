@@ -1,0 +1,1 @@
+export let apiBaseUrl='http://localhost:8120/web'
