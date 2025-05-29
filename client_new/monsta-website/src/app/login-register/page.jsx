@@ -5,11 +5,47 @@ import axios from 'axios'
 import { apiBaseUrl } from '../config'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { useDispatch } from 'react-redux'
+import { loginData } from '../slice/loginSlice'
 
 export default function page() {
 
+    let dispatch=useDispatch()
+
     let [otpStatus,setOtpStatus]=useState(false)
     let [registerStatus,setregisterStatus]=useState(false)
+    let [loginStatus,setloginStatus]=useState(false)
+
+    let loginUser=(event)=>{
+        event.preventDefault()
+        let email=event.target.email.value
+        let password=event.target.password.value
+        let obj={
+            email,
+            password
+        }
+        axios.post(`${process.env.NEXT_PUBLIC_API_BASEURL}/user/login`,obj)
+        .then((res)=>{
+
+            if(res.data.status){
+                let obj=res.data.userData
+                let finalObj={
+                    user:obj,
+                    token:res.data.token
+                }
+                dispatch(loginData(finalObj))
+                setloginStatus(true)
+            }
+            else{
+                alert(res.data.mgs)
+            }
+            
+           
+        })
+        console.log(obj)
+    }
+
+
     let saveUser=(event)=>{
         event.preventDefault()
 
@@ -42,6 +78,13 @@ export default function page() {
         }
       
     },[registerStatus])
+
+    useEffect(()=>{
+        if(loginStatus){
+            redirect("/my-dashboard")
+        }
+      
+    },[loginStatus])
   return (
     <div>
     
@@ -69,14 +112,14 @@ export default function page() {
                 <div class="col-lg-6 col-md-6">
                     <div class="account_form">
                         <h2>login</h2>
-                        <form action="#">
+                        <form action="#" onSubmit={loginUser}>
                             <p>   
                                 <label>Username or email <span>*</span></label>
-                                <input type="text"/>
+                                <input type="text" name='email'/>
                              </p>
                              <p>   
                                 <label>Passwords <span>*</span></label>
-                                <input type="password"/>
+                                <input type="password" name='password'/>
                              </p>   
                             <div class="login_submit">
                                <Link href="/forgot-password">Lost your password?</Link>

@@ -3,6 +3,7 @@ const { userModel } = require("../../models/userModel")
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 let myOTP=new Map();
+let jwt = require('jsonwebtoken');
 let userCreate=async (req,res)=>{
 
     let {email,phone,password}=req.body;
@@ -93,10 +94,21 @@ let login=async (req,res)=>{
 
         let checkPassword= bcrypt.compareSync(password, myDBPassword); // true
         if(checkPassword){
+            let userData={
+                userEmail:userEmail.userEmail,
+                id:userEmail._id,
+            }
+
+            let token = jwt.sign(userData, process.env.TOKENKEY);
+
             resObj={
                 status:1,
-                userData:userEmail
+                userData,
+                token
+
+                
             }
+
         }
 
         else{
@@ -118,4 +130,33 @@ let login=async (req,res)=>{
 
 }
 
-module.exports={userCreate,checkOTP,login}
+
+let changePassword=async (req,res)=>{
+    let {currentPassword,newPassword,id}=  req.body
+  
+    let currenUserData=await   userModel.findOne({_id:id})
+    let  dbPassword= currenUserData.userPassword
+
+    console.log(currenUserData)
+
+    let checkPassword= bcrypt.compareSync(currentPassword, dbPassword); // true
+    if(checkPassword){
+        const hash = bcrypt.hashSync(newPassword, saltRounds); //
+
+         let updRes=await userModel.updateOne({_id:id},{$set:{
+            userPassword:hash
+         }})
+         resObj={
+            status:1,
+             mgs:"Password Changed...."
+        }
+    }
+    else{
+        resObj={
+            status:0,
+             mgs:"Invalid Passwword...."
+        }
+    }
+    res.send(resObj)
+}
+module.exports={userCreate,checkOTP,login,changePassword}

@@ -11,8 +11,20 @@ import { RxCross2 } from "react-icons/rx";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Accordion from 'react-bootstrap/Accordion';
 import { FaAngleDown } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../slice/loginSlice";
 
 export default function Header() {
+
+    //Call 
+    let userData = useSelector((store) => store.loginStore.user)
+    let cartData = useSelector((store) => store.cartStore.cart)
+
+    //
+    let dispatch=useDispatch()
+
+    console.log(userData)
+
     const [showCart, setShowCart] = useState(false);
 
     const handleCloseCart = () => setShowCart(false);
@@ -37,12 +49,20 @@ export default function Header() {
                             </Col>
                             <Col lg={5} md={12}>
 
-                                <Link href={"/login-register"}>
+                                {userData ?
                                     <ul className="auth d-flex justify-content-end">
-                                        <li>Login &nbsp;/</li>
-                                        <li>Register</li>
+                                        <li onClick={()=>dispatch(logOut())}>LogOut</li>
                                     </ul>
-                                </Link>
+                                    :
+                                    <Link href={"/login-register"}>
+                                        <ul className="auth d-flex justify-content-end">
+                                            <li>Login &nbsp;/</li>
+                                            <li>Register</li>
+                                        </ul>
+                                    </Link>
+
+                                }
+
 
                             </Col>
                         </Row>
