@@ -7,8 +7,14 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { useDispatch } from 'react-redux'
 import { loginData } from '../slice/loginSlice'
+import { BiLogoGooglePlusCircle } from 'react-icons/bi'
+import { FaGoogle } from 'react-icons/fa6'
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { app } from '../FireBaseConfig'
 
 export default function page() {
+ 
 
     let dispatch=useDispatch()
 
@@ -71,6 +77,51 @@ export default function page() {
       
 
     }
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth(app);
+
+    let googleLogin=()=>{
+        signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+
+          let userObj={
+            userEmail:user.email,
+            userPhone:user.phone ?? '',
+            verifyStatus:true
+          }
+          
+          axios.post(`${process.env.NEXT_PUBLIC_API_BASEURL}/user/register-google`,userObj).
+          then((res)=>res.data)
+          .then((finalRes)=>{
+            if(finalRes.status){
+                let obj=finalRes.userData
+                let finalObj={
+                    user:obj,
+                    token:finalRes.token
+                }
+                dispatch(loginData(finalObj))
+                setloginStatus(true)
+            }
+          })
+
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }).catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
+    }
 
     useEffect(()=>{
         if(registerStatus){
@@ -128,7 +179,12 @@ export default function page() {
                                     Remember me
                                 </label>
                                 <button type="submit">login</button>
-                                
+                                <div className="google-login">
+                                    <button onClick={googleLogin} type="button" className="google-btn">
+                                        <FaGoogle/>
+                                        Sign in with Google
+                                    </button>
+                                </div>
                             </div>
 
                         </form>

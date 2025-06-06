@@ -159,4 +159,51 @@ let changePassword=async (req,res)=>{
     }
     res.send(resObj)
 }
-module.exports={userCreate,checkOTP,login,changePassword}
+
+
+let userCreatewithGoogleData=async (req,res)=>{
+    
+    console.log(req.body,"Hello")
+
+    let {userEmail,userPhone,verifyStatus}=req.body;
+
+    let checkEmail=await userModel.findOne({userEmail})
+    let resObj
+    let userData
+    if(checkEmail){
+      
+        userData={
+            userEmail:userEmail.userEmail,
+            id:userEmail._id,
+        }
+        let token = jwt.sign(userData, process.env.TOKENKEY);
+        resObj={
+            status:1,
+            userData,
+            token
+
+            
+        }
+    }
+    else{
+        let user=await userModel(req.body)
+        let userRes= await user.save()  
+        userData={
+            userEmail:userRes.userEmail,
+            id:userRes._id,
+        }
+        let token = jwt.sign(userData, process.env.TOKENKEY);
+        resObj={
+            status:1,
+            mgs:"user created",
+            userData,
+            token
+        }
+      
+    }
+    res.send(resObj)
+   
+}
+
+
+module.exports={userCreate,checkOTP,login,changePassword,userCreatewithGoogleData}

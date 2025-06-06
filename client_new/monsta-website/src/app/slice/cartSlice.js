@@ -1,25 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 
+
 export let cartSlice=createSlice({
     name:"cartData",
     initialState:{
-        cart:[]
+        cart:[],
+        imagePath:''
     },
     reducers:{
-       addTocart:function(state){
-            state.cart.push({})
-        },
-        changeQty:function(state){
-            state.cart="null"
-        },
-        deleteQty:function(state){
-            state.cart="null"
+       
+        cartDataList:function(state,data){
+            state.cart=data.payload.cartData
+            state.imagePath=data.payload.imagePath
         }
+       
     }
 })
 
-export const { addTocart, changeQty,deleteQty} = cartSlice.actions
+export const { cartDataList} = cartSlice.actions
 export default cartSlice.reducer
 
 

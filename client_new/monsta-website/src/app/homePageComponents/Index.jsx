@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
@@ -12,8 +12,27 @@ import { GoClock } from "react-icons/go";
 import Bestselling from '../commanComponents/Bestselling';
 import Testimonial from '../commanComponents/Testimonial';
 import "../globals.css";
+import axios from 'axios';
 
 export default function Index() {
+
+    let [productPath,setProductpath]=useState('')
+    let [product,setProduct]=useState([])
+
+    let apiBaseUrl=process.env.NEXT_PUBLIC_API_BASEURL
+
+    let bestsellingProducts=()=>{
+        axios.get(`${apiBaseUrl}/home/bestselling-products`)
+        .then((res)=>res.data)
+        .then((finalres)=>{
+           
+            setProduct(finalres.productList)
+            setProductpath(finalres.staticPath)
+        })
+    }
+
+
+
     var settings = {
         dots: true,
         infinite: true,
@@ -22,6 +41,11 @@ export default function Index() {
         slidesToScroll: 1,
         arrows: false,
     };
+
+useEffect(()=>{
+    bestsellingProducts()
+},[])
+
     return (
         <>
 
@@ -89,7 +113,7 @@ export default function Index() {
             </section>
 
 
-            <Bestselling />
+            <Bestselling product={product} productPath={productPath} />
 
             <section className='shipping_area shipping_two product_bottom_two'>
                 <Container>

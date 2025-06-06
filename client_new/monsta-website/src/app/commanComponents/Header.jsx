@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { AccordionBody, Col, Container, Row } from "react-bootstrap";
 import Link from "next/link";
@@ -13,13 +13,16 @@ import Accordion from 'react-bootstrap/Accordion';
 import { FaAngleDown } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../slice/loginSlice";
+import axios from "axios";
+import { cartDataList } from "../slice/cartSlice";
 
 export default function Header() {
 
     //Call 
     let userData = useSelector((store) => store.loginStore.user)
     let cartData = useSelector((store) => store.cartStore.cart)
-
+    let token=useSelector((store)=>store.loginStore.token)
+    console.log(cartData)
     //
     let dispatch=useDispatch()
 
@@ -34,6 +37,35 @@ export default function Header() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    let getCartData=()=>{
+        axios.post(`${process.env.NEXT_PUBLIC_API_BASEURL}/cart/cartlist`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+                
+            }
+        
+        )
+        .then((res)=>res.data)
+        .then((finalRes)=>{
+            dispatch(cartDataList( {cartData:finalRes.data,imagePath:finalRes.staticPath} ))
+            
+        })
+    }
+
+    useEffect(()=>{
+        if(token){
+            getCartData()
+
+
+        }
+        else{
+            dispatch(cartDataList( {cartData:[],imagePath:''} ))
+        }
+    },[token])
 
     return (
         <>
@@ -94,7 +126,7 @@ export default function Header() {
                                         <FaHeart className="fs-4" />
                                     </div>
                                     <div className="border threeBoxDiv" style={{ cursor: "pointer" }} onClick={handleShowCart}>
-                                        <span className="cart_quantity">0</span>
+                                        <span className="cart_quantity"> {cartData.length} </span>
                                         <IoCart className="fs-5 ms-3 " />
                                         <span className="h-50 border mx-2 border-end"></span>
                                         <span className="fw-bold">Rs. 00 <IoIosArrowDown /></span>
@@ -223,7 +255,13 @@ export default function Header() {
 
 // Cart Modal Component
 function CartModal({ showCart, handleClose }) {
+
+    let cartData = useSelector((store) => store.cartStore.cart)
+  
     const [cartItem, setcartItem] = useState(false);
+
+
+
     return (
         <Offcanvas className="modalClass " show={showCart} onHide={handleClose} placement="end">
             <Offcanvas.Header closeButton>
@@ -231,7 +269,7 @@ function CartModal({ showCart, handleClose }) {
             </Offcanvas.Header>
             <Offcanvas.Body>
 
-                {cartItem ?
+                {cartData.length==0?
                     <>
                         <div className="">
                             <img src="https://wscubetech.co/Assignments/furniture/public/frontend/img/icon/my-Order.jpg" />                         </div>
@@ -242,14 +280,15 @@ function CartModal({ showCart, handleClose }) {
                     </>
                     :
                     <>
-                        <CartItem />
+                       {cartData.map((items,index)=>   <CartItem data={items} key={index} />  )}
+                       
                     </>
                 }
 
                 {cartItem ?
                     ""
                     :
-                    <CartTotal />
+                    <CartTotal show={showCart} onHide={handleClose} />
                 }
 
             </Offcanvas.Body>
@@ -258,16 +297,17 @@ function CartModal({ showCart, handleClose }) {
 }
 
 // Cart Item Component
-function CartItem() {
+function CartItem({data}) {
+    let imagePath = useSelector((store) => store.cartStore.imagePath)
     return (
         <div className="d-flex justify-content-between border-bottom py-3">
             <div className="w-25">
-                <img src="https://wscubetech.co/Assignments/furniture/storage/app/public/uploads/images/products/1663411513681Group%201.jpg" className="img-fluid" alt="cart-item" />
+                <img src={imagePath+data.product.productImage} className="img-fluid" alt="cart-item" />
             </div>
             <div>
-                <small className="text-secondary d-block">Yuvi Sheesham Wood Sofa</small>
-                <small className="text-secondary d-block">Qty: 1</small>
-                <b className="text-secondary">Rs. 7,600</b>
+                <small className="text-secondary d-block">{data.product.productName}</small>
+                <small className="text-secondary d-block">Qty:  {data.qty} </small>
+                <b className="text-secondary">Rs. {data.product.prodcutsalePrice}  </b>
             </div>
             <div><RxCross2 /></div>
         </div>
@@ -275,7 +315,7 @@ function CartItem() {
 }
 
 // Cart Total Component
-function CartTotal() {
+function CartTotal({onHide}) {
     return (
         <div className="mt-3">
             <div className="d-flex justify-content-between">
@@ -283,8 +323,10 @@ function CartTotal() {
                 <div>Rs. 10,100</div>
             </div>
             <div className="bg-dark cartBtn p-1 mt-2">
-                <button className="d-block">VIEW CART</button>
-                <button className="d-block">CHECKOUT</button>
+            <Link href={'/cart'}>  <button onClick={()=>onHide(false)} className="d-block">VIEW CART</button></Link>
+                <Link href={'/checkout'}>
+                 <button className="d-block" onClick={()=>onHide(false)}>CHECKOUT</button>
+                </Link>
             </div>
         </div>
     );

@@ -4,19 +4,27 @@ let colorView=async (req,res)=>{
 
     let searchData={}
   
-    let title=req.query.title;
+ 
+    let {title,currentPage}=req.query
  
     if(title){
         searchData={
             $or:[{colorName:new RegExp(title,"i")},{colorCode:new RegExp(title,"i")}]
         }
     }
+    let limit=3
 
+    let skip=(currentPage-1)*limit;  //3-1 = 2*3  = 6
+   
 
-    let colorData=await colorModel.find(searchData)
+    let colorData=await colorModel.find(searchData).skip(skip).limit(limit) 
+
+    let totRec=await colorModel.find(searchData)
+
     res.send({
         status:1,
         msg:"Color Data",
+        pages:Math.ceil(totRec.length/limit),
         colorData
     })
 }

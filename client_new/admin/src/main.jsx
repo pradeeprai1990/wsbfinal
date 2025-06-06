@@ -40,7 +40,7 @@ import Users from "./Pages/Users.jsx";
 import Newsletters from "./Pages/NewsLetters.jsx";
 import Enquiry from "./Pages/Enquirys.jsx";
 import MainContext from "./MainContext.jsx";
-
+import 'react-responsive-pagination/themes/classic-light-dark.css';
 
 
 const route = createBrowserRouter(

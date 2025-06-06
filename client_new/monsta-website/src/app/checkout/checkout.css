@@ -1,0 +1,115 @@
+.checkout_page {
+  padding-bottom: 70px;
+}
+
+.checkout_content {
+  margin-top: 40px;
+}
+
+.checkout_form h3,
+.order_summary h3 {
+  font-size: 24px;
+  text-transform: capitalize;
+  color: #242424;
+  font-weight: 700;
+  line-height: 32px;
+  margin-bottom: 30px;
+  font-family: "Playfair Display", serif;
+}
+
+.checkout_form label {
+  font-size: 15px;
+  font-weight: 400;
+  color: #212121;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.checkout_form .form-control {
+  border: 1px solid #ebebeb;
+  height: 40px;
+  padding: 0 20px;
+  background: none;
+  width: 100%;
+  font-size: 14px;
+  color: #5a5a5a;
+}
+
+.checkout_form .form-control:focus {
+  border-color: #c09578;
+  box-shadow: none;
+}
+
+.payment_method {
+  margin-top: 40px;
+}
+
+.payment_option {
+  margin-bottom: 20px;
+}
+
+.payment_option p {
+  font-size: 14px;
+  color: #5a5a5a;
+  margin: 10px 0 0 25px;
+}
+
+.order_summary {
+  background: #f8f9f9;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+.order_table table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.order_table th,
+.order_table td {
+  padding: 12px 0;
+  border-bottom: 1px solid #ebebeb;
+  font-size: 14px;
+  color: #5a5a5a;
+}
+
+.order_table th {
+  font-weight: 500;
+  color: #242424;
+}
+
+.order_total {
+  font-weight: 700;
+  color: #242424 !important;
+}
+
+.place_order_btn {
+  background: #c09578;
+  border: 0;
+  color: #ffffff;
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 30px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  border-radius: 3px;
+}
+
+.place_order_btn:hover {
+  background: #242424;
+}
+
+@media only screen and (max-width: 767px) {
+  .checkout_content {
+    margin-top: 30px;
+  }
+  
+  .order_summary {
+    margin-top: 30px;
+  }
+} 

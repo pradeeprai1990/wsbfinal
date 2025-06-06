@@ -6,32 +6,36 @@ import { CiEdit } from 'react-icons/ci';
 import { FaFilter } from 'react-icons/fa';
 import axios from 'axios';
 import { apiBaseUrl } from '../../Config';
+import ResponsivePagination from 'react-responsive-pagination';
 // import { MdModeEditOutline } from "react-icons/md";
 
 export default function ViewCategory() {
+  const [currentPage, setCurrentPage] = useState(1);
 
   let [title,setTitle]=useState('')
   // let [orderModal, setOrderModal] = useState(false);
   let [colorList, setColorList] = useState([])
   let [delAllids,setAlldelIds]=useState([])
-
+  let [totalPage,setTotalPage]=useState(0) 
   let [activeFilter, setactiveFilter] = useState(true);
 
   let getColor = () => {
     axios.get(`${apiBaseUrl}/color/view`,{
       params:{
-        title
+        title,
+        currentPage
       }
     })
       .then((res) => res.data)
       .then((finalres) => {
         setColorList(finalres.colorData)
+        setTotalPage(finalres.pages) //3
       })
   }
 
   useEffect(() => {
     getColor()
-  }, [])
+  }, [title,currentPage])
 
   //delAllids =[1,2,3]
   let getAllCheckValue=(event)=>{
@@ -147,6 +151,9 @@ export default function ViewCategory() {
                         </div>
                       </th>
                       <th scope="col" class="px-6 py-3">
+                        Sr No
+                      </th>
+                      <th scope="col" class="px-6 py-3">
                         Color Name
                       </th>
                       <th scope="col" class=" w-[10%] ">
@@ -179,13 +186,16 @@ export default function ViewCategory() {
                                 <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
                               </div>
                             </td>
+                            <th>
+                                { (currentPage-1)*3 + index+1}
+                            </th>
                             <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
 
                               <div class="py-4">
                                 <div class="text-base font-semibold">
                                   {items.colorName}
-                                  <br/>
-                                  {items._id}
+                                  
+                                 
                                 </div>
 
                               </div>
@@ -231,6 +241,11 @@ export default function ViewCategory() {
 
                   </tbody>
                 </table>
+                <ResponsivePagination
+                  current={currentPage}
+                  total={totalPage}
+                  onPageChange={setCurrentPage}
+               />
               </div>
 
 

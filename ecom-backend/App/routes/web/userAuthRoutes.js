@@ -1,10 +1,12 @@
 let express=require("express")
 let userAuthRoures=express.Router()
 const multer = require('multer');
-const { userCreate, checkOTP, login, changePassword } = require("../../controllers/web/userAuthContoller");
+const { userCreate, checkOTP, login, changePassword, userCreatewithGoogleData } = require("../../controllers/web/userAuthContoller");
 const { checkToken } = require("../../middleware/checkToken");
 let upload=multer({storage:''})
 userAuthRoures.post('/register',upload.none(),userCreate)
+
+userAuthRoures.post('/register-google',userCreatewithGoogleData)
 userAuthRoures.post('/check-otp',upload.none(),checkOTP)
 
 userAuthRoures.post('/login',upload.none(),login)
